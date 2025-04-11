@@ -26,85 +26,97 @@ class SimpleCalcView extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<SimpleCalcCubit, SimpleCalcState>(
-        bloc: _simpleCalcCubit,
-        builder: (context, state) {
-          if (state is SimpleCalcCalculated) {
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(child: Text('Product Cost:')),
-                                Expanded(child: TextField(controller: _costController)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(child: Text('Tender Amount:')),
-                                Expanded(child: TextField(controller: _tenderController)),
-                              ],
-                            ),
-                          ],
-                        ),
+  bloc: _simpleCalcCubit,
+  builder: (context, state) {
+    if (state is SimpleCalcError) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            state.message,
+            style: TextStyle(color: Colors.red, fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    } // <-- Add this closing brace
+    if (state is SimpleCalcCalculated) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(child: Text('Product Cost:')),
+                          Expanded(child: TextField(controller: _costController)),
+                        ],
                       ),
-                    ),
-                    Offstage(
-                      offstage: state.breakdown.isNotEmpty,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Center(child: Text('See simple_calc_cubit.dart TODO')),
+                      Row(
+                        children: [
+                          Expanded(child: Text('Tender Amount:')),
+                          Expanded(child: TextField(controller: _tenderController)),
+                        ],
                       ),
-                    ),
-                    Offstage(
-                      offstage: state.breakdown.isEmpty,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                Text('Total change R${state.totalChange}', style: TextStyle(fontWeight: FontWeight.bold)),
-                                Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (_hasNotes(state.breakdown)) ...[
-                                    Text('🧾 Notes:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    ..._buildEntries(state.breakdown, isNote: true),
-                                  ],
-                                  SizedBox(height: 10),
-                                  if (_hasCoins(state.breakdown)) ...[
-                                    Text('🪙 Coins:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                    ..._buildEntries(state.breakdown, isNote: false),
-                                  ],
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Container()),
-                    ElevatedButton(
-                      onPressed: () => _calculateChange(context),
-                      child: Text('Calculate change'),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            );
-          }
+              Offstage(
+                offstage: state.breakdown.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Center(child: Text('See simple_calc_cubit.dart TODO')),
+                ),
+              ),
+              Offstage(
+                offstage: state.breakdown.isEmpty,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Total change R${state.totalChange}', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (_hasNotes(state.breakdown)) ...[
+                              Text('🧾 Notes:', style: TextStyle(fontWeight: FontWeight.bold)),
+                              ..._buildEntries(state.breakdown, isNote: true),
+                            ],
+                            SizedBox(height: 10),
+                            if (_hasCoins(state.breakdown)) ...[
+                              Text('🪙 Coins:', style: TextStyle(fontWeight: FontWeight.bold)),
+                              ..._buildEntries(state.breakdown, isNote: false),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(child: Container()),
+              ElevatedButton(
+                onPressed: () => _calculateChange(context),
+                child: Text('Calculate change'),
+              )
+            ],
+          ),
+        ),
+      );
+    }
 
-          return Container();
-        },
-      ),
+    return Container();
+  },
+),
     );
   }
 }

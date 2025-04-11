@@ -14,3 +14,12 @@ class SimpleCalcCalculated extends SimpleCalcState {
   @override
   List<Object> get props => [breakdown, totalChange];
 }
+
+class SimpleCalcError extends SimpleCalcState {
+  final String message;
+
+  SimpleCalcError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

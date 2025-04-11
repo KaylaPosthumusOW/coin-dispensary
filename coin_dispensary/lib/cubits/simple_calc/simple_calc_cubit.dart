@@ -11,6 +11,10 @@ class SimpleCalcCubit extends Cubit<SimpleCalcState> {
 
     num totalChange = tender - cost;
 
+    if (tender < cost) {
+      emit(SimpleCalcError('Tendered amount is less than the cost. ')); // Emit error state
+      return;
+    }
     // Round total change to 2 decimals
     totalChange = num.parse(totalChange.toStringAsFixed(2));
 
